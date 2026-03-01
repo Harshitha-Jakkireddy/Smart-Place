@@ -1,0 +1,141 @@
+/* ===== Wrapper ===== */
+
+.matching-wrapper {
+  padding: 40px;
+  background: #f4f7fb;
+  min-height: 100vh;
+}
+
+.matching-header h2 {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.matching-header p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* ===== Dropdown ===== */
+
+.job-dropdown-container {
+  margin-bottom: 40px;
+}
+
+.job-dropdown {
+  padding: 12px 18px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: linear-gradient(135deg, #1c3f63, #2f6da4);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.job-dropdown:hover {
+  transform: scale(1.03);
+}
+
+/* ===== Cards Layout ===== */
+
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* ===== Match Card ===== */
+
+.match-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+  transition: all 0.35s ease;
+}
+
+.match-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+}
+
+/* Left Section */
+
+.card-left {
+  flex: 1;
+}
+
+.rank {
+  background: linear-gradient(135deg, #1c3f63, #2f6da4);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card-left h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+/* Skills */
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-pill {
+  padding: 6px 14px;
+  background: #eaf3ff;
+  color: #1c3f63;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.skill-pill:hover {
+  background: #1c3f63;
+  color: white;
+}
+
+/* Right Section */
+
+.card-right {
+  text-align: center;
+}
+
+/* Score Ring */
+
+.score-ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: conic-gradient(#2f6da4 calc(var(--percent) * 1%), #e6e6e6 0%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #1c3f63;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.score-label {
+  font-size: 13px;
+  color: #666;
+}
