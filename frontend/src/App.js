@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/StudentDashboard";
@@ -12,23 +12,21 @@ import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
-    <Router>
-      <Routes>
+    <Routes>
 
-        {/* LOGIN */}
-        <Route path="/" element={<Login />} />
+      {/* LOGIN */}
+      <Route path="/" element={<Login />} />
 
-        {/* STUDENT */}
-        <Route path="/student" element={<StudentDashboard />} />
-        <Route path="/student/profile" element={<Profile />} />
-        <Route path="/student/jobs" element={<AvailableJobs />} />
-        <Route path="/student/applications" element={<Applications />} />
+      {/* STUDENT */}
+      <Route path="/student" element={<StudentDashboard />} />
+      <Route path="/student/profile" element={<Profile />} />
+      <Route path="/student/jobs" element={<AvailableJobs />} />
+      <Route path="/student/applications" element={<Applications />} />
 
-        {/* ADMIN */}
-        <Route path="/admin" element={<AdminDashboard />} />
+      {/* ADMIN */}
+      <Route path="/admin" element={<AdminDashboard />} />
 
-      </Routes>
-    </Router>
+    </Routes>
   );
 }
 
