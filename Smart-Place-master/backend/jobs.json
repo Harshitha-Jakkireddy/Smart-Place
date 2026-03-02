@@ -1,0 +1,28 @@
+[
+    {
+        "id": 1,
+        "title": "Frontend Developer",
+        "description": "We are looking for a Frontend Developer responsible for building responsive web applications using React.js. The candidate should have strong knowledge of JavaScript, HTML, CSS, and REST API integration. The role involves collaborating with backend developers, implementing UI/UX designs, and optimizing application performance.",
+        "required_skills": [
+            "react",
+            "javascript",
+            "html",
+            "css",
+            "rest api",
+            "git"
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Full Stack Developer",
+        "description": "We are looking for a skilled Full Stack Developer to build scalable web applications and work on both frontend and backend systems. The ideal candidate should have strong problem-solving skills and experience with modern web technologies..",
+        "required_skills": [
+            "React.js",
+            "Node.js",
+            "MongoDB",
+            "REST API",
+            "HTML",
+            "CSS"
+        ]
+    }
+]

@@ -1,0 +1,24 @@
+[
+    {
+        "email": "harshithajakkireddy@gmail.com",
+        "skills": [
+            "python",
+            "java",
+            "react",
+            "javascript",
+            "sql",
+            "html",
+            "css"
+        ]
+    },
+    {
+        "email": "harshithathota@gmail.com",
+        "skills": [
+            "python",
+            "java",
+            "sql",
+            "html",
+            "css"
+        ]
+    }
+]
