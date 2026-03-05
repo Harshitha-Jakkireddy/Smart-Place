@@ -1,0 +1,172 @@
+/* PAGE BACKGROUND */
+.matching-container {
+    padding: 40px;
+    background: linear-gradient(135deg, #dff9fb, #c7f1f5, #e8fbff);
+    min-height: 100vh;
+}
+
+/* PAGE TITLE */
+.page-title {
+    font-size: 30px;
+    margin-bottom: 30px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* JOB CARD */
+.job-card {
+    background: #ecfeff;
+    padding: 30px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    transition: 0.3s;
+}
+
+.job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+}
+
+/* HEADER */
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* DESCRIPTION */
+.job-description {
+    margin-top: 10px;
+    color: #334155;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* MATCH SCORE */
+.match-score {
+    background: linear-gradient(135deg, #06b6d4, #22d3ee);
+    color: white;
+    padding: 18px;
+    border-radius: 14px;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 90px;
+}
+
+.match-score span {
+    display: block;
+    font-size: 12px;
+}
+
+/* SKILLS SECTION */
+.skills-section {
+    margin-top: 22px;
+}
+
+.skills-section h4 {
+    margin-bottom: 8px;
+}
+
+/* SKILL TAGS */
+.skills {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.skill {
+    padding: 8px 14px;
+    border-radius: 25px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+/* MATCHED */
+.matched {
+    background: #d1fae5;
+    color: #047857;
+}
+
+/* MISSING */
+.missing {
+    background: #fecaca;
+    color: #b91c1c;
+}
+
+/* RECOMMENDATION BOX */
+.recommend-box {
+    margin-top: 25px;
+    background: #fff0f6;
+    /* soft pink */
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* RECOMMEND GRID */
+.recommend-grid {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* RECOMMEND CARD */
+.recommend-card {
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: 0.25s;
+}
+
+.recommend-card:hover {
+    transform: scale(1.05);
+}
+
+/* DIFFERENT COLORS FOR RECOMMENDATIONS */
+
+.rec1 {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.rec2 {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.rec3 {
+    background: #e9d5ff;
+    color: #6b21a8;
+}
+
+.rec4 {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.rec5 {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.rec6 {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+/* BULB ICON */
+.bulb {
+    color: #f59e0b;
+    font-size: 16px;
+}

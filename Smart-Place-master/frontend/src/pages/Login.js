@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 function Login() {
+
   const [activeTab, setActiveTab] = useState("signin");
   const [selectedRole, setSelectedRole] = useState("");
   const [email, setEmail] = useState("");
@@ -12,13 +13,11 @@ function Login() {
 
   const handleSubmit = async () => {
 
-    // ✅ Empty validation
     if (!email || !password) {
       alert("Please enter email and password");
       return;
     }
 
-    // ✅ Role validation during signup
     if (activeTab === "signup" && !selectedRole) {
       alert("Please select a role");
       return;
@@ -38,9 +37,7 @@ function Login() {
 
       const response = await fetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bodyData),
       });
 
@@ -51,7 +48,7 @@ function Login() {
         return;
       }
 
-      // ✅ Signup success
+      // ✅ SIGNUP SUCCESS
       if (activeTab === "signup") {
         alert("Account created successfully!");
         setActiveTab("signin");
@@ -61,10 +58,12 @@ function Login() {
         return;
       }
 
-      // ✅ Login success
+      // ✅ LOGIN SUCCESS
       localStorage.setItem("role", data.role);
+      localStorage.setItem("user_id", data.user_id);   // 🔥 IMPORTANT
+      localStorage.setItem("email", data.email);
 
-      // ✅ Role based navigation
+      // Navigate based on role
       if (data.role === "admin") {
         navigate("/admin");
       } else {
@@ -80,7 +79,6 @@ function Login() {
   return (
     <div className="login-container">
 
-      {/* LEFT PANEL */}
       <div className="left-panel">
         <div className="branding">
           <h1>Smart Place</h1>
@@ -92,7 +90,6 @@ function Login() {
         </div>
       </div>
 
-      {/* RIGHT PANEL */}
       <div className="right-panel">
         <div className="login-box">
 
@@ -134,18 +131,14 @@ function Login() {
 
               <div className="role-buttons">
                 <button
-                  className={`role-btn ${
-                    selectedRole === "student" ? "active-role" : ""
-                  }`}
+                  className={`role-btn ${selectedRole === "student" ? "active-role" : ""}`}
                   onClick={() => setSelectedRole("student")}
                 >
                   🎓 Student
                 </button>
 
                 <button
-                  className={`role-btn ${
-                    selectedRole === "admin" ? "active-role" : ""
-                  }`}
+                  className={`role-btn ${selectedRole === "admin" ? "active-role" : ""}`}
                   onClick={() => setSelectedRole("admin")}
                 >
                   🛠 Admin

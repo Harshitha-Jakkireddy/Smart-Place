@@ -46,6 +46,7 @@ function AdminDashboard() {
       fetchJobs();
     }, []);
 
+    /* -------- FETCH ALL JOBS -------- */
     const fetchJobs = async () => {
       try {
         const response = await fetch("http://127.0.0.1:5000/jobs");
@@ -56,13 +57,19 @@ function AdminDashboard() {
       }
     };
 
+    /* -------- FETCH MATCHES -------- */
     const fetchMatches = async (jobId) => {
       try {
         const response = await fetch(
-          `http://127.0.0.1:5000/match/${jobId}`
+          `http://127.0.0.1:5000/admin/match/${jobId}`
         );
+
         const data = await response.json();
+
+        console.log("ADMIN MATCH DATA:", data);
+
         setResults(data);
+
       } catch (error) {
         console.error("Error fetching matches:", error);
       }
@@ -96,8 +103,12 @@ function AdminDashboard() {
         </div>
 
         {/* MATCH RESULTS */}
-        {results?.results && (
+        {results && results.results && (
           <div className="cards-container">
+
+            {results.results.length === 0 && (
+              <h3>No resumes uploaded yet.</h3>
+            )}
 
             {results.results.map((candidate, index) => (
 
@@ -121,11 +132,10 @@ function AdminDashboard() {
                   <div
                     className="score-ring"
                     style={{
-                      "--percent":
-                        candidate.final_score_percentage
+                      "--percent": candidate.match_percentage
                     }}
                   >
-                    {candidate.final_score_percentage}%
+                    {candidate.match_percentage}%
                   </div>
 
                   <span className="score-label">

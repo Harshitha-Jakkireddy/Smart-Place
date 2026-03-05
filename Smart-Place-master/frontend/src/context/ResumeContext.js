@@ -3,6 +3,7 @@ import React, { createContext, useState } from "react";
 export const ResumeContext = createContext();
 
 export const ResumeProvider = ({ children }) => {
+
     const [analysis, setAnalysis] = useState(null);
 
     return (

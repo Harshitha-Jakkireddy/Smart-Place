@@ -37,56 +37,66 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # ------------------------
-# SKILL DICTIONARY
+# SKILL KEYWORDS
 # ------------------------
 SKILL_KEYWORDS = [
-    "python", "java", "c++", "flask", "django",
-    "mysql", "postgresql", "mongodb",
-    "react", "node", "javascript",
-    "html", "css",
-    "machine learning", "deep learning",
-    "tensorflow", "pytorch"
+    # Programming
+    "python","java","c++","c","javascript","typescript",
+    
+    # Frontend
+    "react","angular","vue","html","css","bootstrap","tailwind",
+    
+    # Backend
+    "node","node.js","express","flask","django","spring","rest api",
+    
+    # Database
+    "mysql","postgresql","mongodb","sqlite","oracle",
+    
+    # Cloud & DevOps
+    "aws","azure","docker","kubernetes",
+    
+    # AI/ML
+    "machine learning","deep learning","tensorflow","pytorch","nlp",
+    
+    # Tools
+    "git","github","linux","jira"
 ]
 
 # ------------------------
-# SKILL EXTRACTION
+# EXTRACT SKILLS
 # ------------------------
 def extract_skills(text):
     text = text.lower()
     return list(set(skill for skill in SKILL_KEYWORDS if skill in text))
 
 # ------------------------
-# MATCHING LOGIC
+# MATCH LOGIC
 # ------------------------
-def compute_match(resume_name, resume_skills, job_skills):
+def compute_match(resume_skills, job_skills):
 
     resume_skills = [s.lower() for s in resume_skills]
     job_skills = [s.lower() for s in job_skills]
 
     matched_skills = list(set(resume_skills) & set(job_skills))
+    missing_skills = list(set(job_skills) - set(resume_skills))
 
-    exact_ratio = len(matched_skills) / len(job_skills) if job_skills else 0
-    exact_percentage = round(exact_ratio * 100, 2)
+    match_percentage = round(
+        (len(matched_skills) / len(job_skills)) * 100, 2
+    ) if job_skills else 0
 
-    resume_text = " ".join(resume_skills)
-    job_text = " ".join(job_skills)
-
-    resume_embedding = model.encode([resume_text])
-    job_embedding = model.encode([job_text])
-
-    cosine_sim = float(cosine_similarity(resume_embedding, job_embedding)[0][0])
-    cosine_percentage = round(cosine_sim * 100, 2)
-
-    final_score = (0.6 * cosine_sim) + (0.4 * exact_ratio)
-    final_percentage = round(final_score * 100, 2)
+    recommendations = []
+    for skill in missing_skills:
+        recommendations.append(f"Improve {skill}")
+        recommendations.append(f"Build project using {skill}")
 
     return {
-        "resume_name": resume_name,
         "matched_skills": matched_skills,
-        "cosine_similarity_percentage": cosine_percentage,
-        "exact_match_percentage": exact_percentage,
-        "final_score_percentage": final_percentage
+        "missing_skills": missing_skills,
+        "match_percentage": match_percentage,
+        "recommendations": recommendations
     }
+
+    
 
 # ------------------------
 # USER MODEL
@@ -108,10 +118,10 @@ def register():
     data = request.json
 
     if not data or not data.get("email") or not data.get("password") or not data.get("role"):
-        return jsonify({"success": False, "message": "All fields required"}), 400
+        return jsonify({"message": "All fields required"}), 400
 
     if User.query.filter_by(email=data["email"]).first():
-        return jsonify({"success": False, "message": "User already exists"}), 400
+        return jsonify({"message": "User already exists"}), 400
 
     hashed_pw = bcrypt.generate_password_hash(data['password']).decode('utf-8')
 
@@ -124,7 +134,7 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({"success": True, "message": "User registered successfully"}), 201
+    return jsonify({"message": "Registered successfully"}), 201
 
 # ------------------------
 # LOGIN
@@ -133,60 +143,48 @@ def register():
 def login():
     data = request.json
 
-    if not data or not data.get("email") or not data.get("password"):
-        return jsonify({"success": False, "message": "Missing credentials"}), 400
-
     user = User.query.filter_by(email=data["email"]).first()
 
     if user and bcrypt.check_password_hash(user.password, data["password"]):
         return jsonify({
-            "success": True,
             "role": user.role,
             "user_id": user.id,
             "email": user.email
         }), 200
 
-    return jsonify({"success": False, "message": "Invalid credentials"}), 401
+    return jsonify({"message": "Invalid credentials"}), 401
 
 # ------------------------
 # CREATE JOB
 # ------------------------
 @app.route('/jobs', methods=['POST'])
 def create_job():
-    try:
-        data = request.get_json()
 
-        if not data:
-            return jsonify({"success": False, "message": "No data received"}), 400
+    data = request.get_json()
 
-        if not data.get("title") or not data.get("required_skills"):
-            return jsonify({"success": False, "message": "Title and skills required"}), 400
+    if not data or not data.get("title") or not data.get("required_skills"):
+        return jsonify({"message": "Title and skills required"}), 400
 
-        new_job = {
-            "id": None,
-            "title": data["title"],
-            "description": data.get("description", ""),
-            "required_skills": data["required_skills"]
-        }
-
-        if not os.path.exists(JOBS_FILE):
-            with open(JOBS_FILE, "w") as f:
-                json.dump([], f)
-
-        with open(JOBS_FILE, "r") as f:
-            jobs = json.load(f)
-
-        new_job["id"] = len(jobs) + 1
-        jobs.append(new_job)
-
+    if not os.path.exists(JOBS_FILE):
         with open(JOBS_FILE, "w") as f:
-            json.dump(jobs, f, indent=4)
+            json.dump([], f)
 
-        return jsonify({"success": True, "message": "Job created successfully"}), 201
+    with open(JOBS_FILE, "r") as f:
+        jobs = json.load(f)
 
-    except Exception as e:
-        print("Create job error:", e)
-        return jsonify({"success": False, "message": "Job creation failed"}), 500
+    new_job = {
+        "id": len(jobs) + 1,
+        "title": data["title"],
+        "description": data.get("description", ""),
+        "required_skills": data["required_skills"]
+    }
+
+    jobs.append(new_job)
+
+    with open(JOBS_FILE, "w") as f:
+        json.dump(jobs, f, indent=4)
+
+    return jsonify({"message": "Job created"}), 201
 
 # ------------------------
 # GET JOBS
@@ -194,42 +192,46 @@ def create_job():
 @app.route('/jobs', methods=['GET'])
 def get_jobs():
     if not os.path.exists(JOBS_FILE):
-        return jsonify([]), 200
+        return jsonify([])
 
     with open(JOBS_FILE, "r") as f:
         jobs = json.load(f)
 
-    return jsonify(jobs), 200
+    return jsonify(jobs)
 
 # ------------------------
-# UPLOAD RESUME
+# UPLOAD RESUME (Linked to User)
 # ------------------------
 @app.route('/upload_resume', methods=['POST'])
 def upload_resume():
+
+    user_id = request.form.get("user_id")
+
+    if not user_id:
+        return jsonify({"message": "User ID required"}), 400
+
     if 'file' not in request.files:
-        return jsonify({"success": False, "message": "No file provided"}), 400
+        return jsonify({"message": "No file"}), 400
 
     file = request.files['file']
 
-    if file.filename == '':
-        return jsonify({"success": False, "message": "No file selected"}), 400
+    if not file.filename.lower().endswith(".pdf"):
+        return jsonify({"message": "Only PDF allowed"}), 400
 
-    if not file.filename.lower().endswith(('.pdf', '.doc', '.docx')):
-        return jsonify({"success": False, "message": "Invalid file format"}), 400
-
-    save_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    filename = f"{user_id}_{file.filename}"
+    save_path = os.path.join(UPLOAD_FOLDER, filename)
     file.save(save_path)
 
-    return jsonify({"success": True, "message": "Resume uploaded successfully"}), 200
+    return jsonify({"message": "Resume uploaded"}), 200
 
 # ------------------------
-# MATCH RESUMES
+# ADMIN MATCH (ALL RESUMES)
 # ------------------------
-@app.route('/match/<int:job_id>', methods=['GET'])
-def match_resumes(job_id):
+@app.route('/admin/match/<int:job_id>', methods=['GET'])
+def admin_match(job_id):
 
     if not os.path.exists(JOBS_FILE):
-        return jsonify({"message": "No jobs found"}), 404
+        return jsonify({"results": []})
 
     with open(JOBS_FILE, "r") as f:
         jobs = json.load(f)
@@ -239,28 +241,89 @@ def match_resumes(job_id):
     if not job:
         return jsonify({"message": "Job not found"}), 404
 
-    job_skills = job["required_skills"]
     results = []
 
     for filename in os.listdir(UPLOAD_FOLDER):
+
         if filename.endswith(".pdf"):
+
             file_path = os.path.join(UPLOAD_FOLDER, filename)
 
             with pdfplumber.open(file_path) as pdf:
-                resume_text = ""
+                text = ""
                 for page in pdf.pages:
-                    text = page.extract_text()
-                    if text:
-                        resume_text += text
+                    if page.extract_text():
+                        text += page.extract_text()
 
-            resume_skills = extract_skills(resume_text)
+            resume_skills = extract_skills(text)
 
-            result = compute_match(filename, resume_skills, job_skills)
-            results.append(result)
+            match_data = compute_match(resume_skills, job["required_skills"])
 
-    results.sort(key=lambda x: x["final_score_percentage"], reverse=True)
+            results.append({
+                "resume_name": filename,
+                **match_data
+            })
 
-    return jsonify(results), 200
+    results.sort(key=lambda x: x["match_percentage"], reverse=True)
+
+    return jsonify({
+        "job_title": job["title"],
+        "results": results
+    })
+
+# ------------------------
+# STUDENT MATCH (ONLY HIS RESUME)
+# ------------------------
+@app.route('/student/match/<int:user_id>', methods=['GET'])
+def student_match(user_id):
+
+    student_resume = None
+
+    for filename in os.listdir(UPLOAD_FOLDER):
+        if filename.startswith(f"{user_id}_"):
+            student_resume = filename
+            break
+
+    if not student_resume:
+        return jsonify({
+            "message": "No Resume Uploaded",
+            "results": []
+        })
+
+    resume_path = os.path.join(UPLOAD_FOLDER, student_resume)
+
+    with pdfplumber.open(resume_path) as pdf:
+        text = ""
+        for page in pdf.pages:
+            if page.extract_text():
+                text += page.extract_text()
+
+    resume_skills = extract_skills(text)
+
+    if not os.path.exists(JOBS_FILE):
+        return jsonify({"results": []})
+
+    with open(JOBS_FILE, "r") as f:
+        jobs = json.load(f)
+
+    results = []
+
+    for job in jobs:
+
+        match_data = compute_match(resume_skills, job["required_skills"])
+
+        results.append({
+            "job_title": job["title"],
+            "description": job["description"],
+            **match_data
+        })
+
+    results.sort(key=lambda x: x["match_percentage"], reverse=True)
+
+    return jsonify({
+        "resume_name": student_resume,
+        "results": results
+    })
 
 # ------------------------
 # RUN

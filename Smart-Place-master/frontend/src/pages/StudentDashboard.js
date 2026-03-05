@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaTachometerAlt,
@@ -13,6 +13,36 @@ import "./StudentLayout.css";
 function StudentDashboard() {
 
   const navigate = useNavigate();
+
+  const [stats, setStats] = useState({
+    total_jobs: 0,
+    matched_jobs: 0,
+    average_match: 0,
+    skills_to_improve: 0
+  });
+
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
+
+  const fetchDashboard = async () => {
+
+    const userId = localStorage.getItem("user_id");
+
+    try {
+
+      const response = await fetch(
+        `http://127.0.0.1:5000/student/dashboard/${userId}`
+      );
+
+      const data = await response.json();
+
+      setStats(data);
+
+    } catch (error) {
+      console.error("Dashboard fetch error:", error);
+    }
+  };
 
   const logout = () => {
     localStorage.clear();
@@ -42,13 +72,7 @@ function StudentDashboard() {
           <FaChartBar /> Matching Jobs
         </button>
 
-        <button onClick={() => navigate("/student/skill-gap")}>
-          <FaChartBar /> Skill Gap Analysis
-        </button>
 
-        <button onClick={() => navigate("/student/recommendations")}>
-          <FaLightbulb /> Recommendations
-        </button>
 
         <div className="bottom">
           <button onClick={logout}>
@@ -64,25 +88,27 @@ function StudentDashboard() {
         <h1>Dashboard</h1>
 
         <div className="stats">
+
           <div className="card">
-            <h3>12</h3>
+            <h3>{stats.total_jobs}</h3>
             <p>Total Jobs</p>
           </div>
 
           <div className="card">
-            <h3>5</h3>
+            <h3>{stats.matched_jobs}</h3>
             <p>Matched Jobs</p>
           </div>
 
           <div className="card">
-            <h3>68%</h3>
+            <h3>{stats.average_match}%</h3>
             <p>Average Match</p>
           </div>
 
           <div className="card">
-            <h3>4</h3>
+            <h3>{stats.skills_to_improve}</h3>
             <p>Skills to Improve</p>
           </div>
+
         </div>
 
       </div>

@@ -1,43 +1,96 @@
-import React, { useContext } from "react";
-import { ResumeContext } from "../../context/ResumeContext";
+import React, { useEffect, useState } from "react";
+import "./MatchingJobs.css";
 
 function MatchingJobs() {
-    const { analysis } = useContext(ResumeContext);
 
-    if (!analysis) return <h2>Please upload resume first.</h2>;
+    const [results, setResults] = useState([]);
+    const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        fetchMatches();
+    }, []);
+
+    const fetchMatches = async () => {
+
+        const userId = localStorage.getItem("user_id");
+
+        const response = await fetch(
+            `http://127.0.0.1:5000/student/match/${userId}`
+        );
+
+        const data = await response.json();
+
+        if (!data.results || data.results.length === 0) {
+            setMessage("No Job Matches Yet");
+        } else {
+            setResults(data.results);
+        }
+    };
 
     return (
-        <div className="student-container">
-            <h2>📊 Matching Jobs</h2>
+        <div className="matching-container">
 
-            {analysis.results.map((job, index) => (
-                <div className="job-card" key={index}>
-                    <h3>🧾 {job.job_title}</h3>
+            <h2 className="page-title">Matching Jobs</h2>
 
-                    <div className="progress">
-                        <div
-                            className="progress-fill"
-                            style={{ width: `${job.final_score_percentage}%` }}
-                        >
-                            {job.final_score_percentage}%
+            {message && <h3>{message}</h3>}
+
+            {results.map((job, index) => (
+
+                <div key={index} className="job-card">
+
+                    <div className="job-header">
+                        <h3>{job.job_title}</h3>
+
+                        <div className="match-score">
+                            {job.match_percentage}%
+                            <span>Match</span>
                         </div>
                     </div>
 
-                    <h4>🧠 Matched Skills</h4>
-                    {job.matched_skills.map((skill, i) => (
-                        <span key={i} className="badge">
-                            {skill}
-                        </span>
-                    ))}
+                    <p className="job-description">
+                        {job.description.substring(0, 120)}...
+                    </p>
 
-                    <h4>❌ Missing Skills</h4>
-                    {job.missing_skills.map((skill, i) => (
-                        <span key={i} className="badge-missing">
-                            {skill}
-                        </span>
-                    ))}
+                    <div className="skills-section">
+
+                        <h4>Matched Skills</h4>
+                        <div className="skills">
+                            {job.matched_skills.map((skill, i) => (
+                                <span key={i} className="skill matched">
+                                    ✔ {skill}
+                                </span>
+                            ))}
+                        </div>
+
+                        <h4>Missing Skills</h4>
+                        <div className="skills">
+                            {job.missing_skills.map((skill, i) => (
+                                <span key={i} className="skill missing">
+                                    ✖ {skill}
+                                </span>
+                            ))}
+                        </div>
+
+                    </div>
+
+                    <div className="recommend-box">
+
+                        <h4>Recommendations</h4>
+
+                        <div className="recommend-grid">
+                            {job.recommendations.map((rec, i) => (
+                                <div key={i} className={`recommend-card rec${(i % 4) + 1}`}>
+                                    💡 {rec}
+                                </div>
+                            ))}
+                        </div>
+
+                    </div>
+
                 </div>
+
             ))}
+
         </div>
     );
 }

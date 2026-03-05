@@ -10,7 +10,6 @@ import Applications from "./pages/student/Applications";
 
 import UploadResume from "./pages/student/UploadResume";
 import MatchingJobs from "./pages/student/MatchingJobs";
-import SkillGap from "./pages/student/SkillGap";
 import Recommendations from "./pages/student/Recommendations";
 
 import AdminDashboard from "./pages/AdminDashboard";
@@ -20,10 +19,8 @@ function App() {
   return (
     <Routes>
 
-      {/* LOGIN */}
       <Route path="/" element={<Login />} />
 
-      {/* STUDENT */}
       <Route path="/student" element={<StudentDashboard />} />
       <Route path="/student/profile" element={<Profile />} />
       <Route path="/student/jobs" element={<AvailableJobs />} />
@@ -31,10 +28,8 @@ function App() {
 
       <Route path="/student/upload" element={<UploadResume />} />
       <Route path="/student/matching" element={<MatchingJobs />} />
-      <Route path="/student/skill-gap" element={<SkillGap />} />
       <Route path="/student/recommendations" element={<Recommendations />} />
 
-      {/* ADMIN */}
       <Route path="/admin" element={<AdminDashboard />} />
       <Route path="/admin/matching" element={<MatchingResults />} />
 

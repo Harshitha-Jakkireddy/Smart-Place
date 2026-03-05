@@ -1,42 +1,56 @@
 import React, { useContext } from "react";
 import { ResumeContext } from "../../context/ResumeContext";
-
-const recommendationMap = {
-    react: {
-        course: "React – Udemy",
-        project: "Build Full Stack Web App"
-    },
-    aws: {
-        course: "AWS – Coursera",
-        project: "Deploy Flask App to Cloud"
-    },
-    docker: {
-        course: "Docker – Udemy",
-        project: "Containerize Web Application"
-    }
-};
+import "./Recommendations.css";
 
 function Recommendations() {
+
     const { analysis } = useContext(ResumeContext);
 
-    if (!analysis) return <h2>Please upload resume first.</h2>;
-
-    const missing = new Set();
-    analysis.results.forEach(job => {
-        job.missing_skills.forEach(skill => missing.add(skill.toLowerCase()));
-    });
+    if (!analysis || !analysis.results) {
+        return (
+            <div style={{ padding: "40px" }}>
+                <h2>No recommendations available</h2>
+                <p>Please upload resume and run job matching first.</p>
+            </div>
+        );
+    }
 
     return (
-        <div className="student-container">
-            <h2>💡 Recommendations</h2>
+        <div className="recommend-container">
 
-            {[...missing].map((skill, i) => (
-                <div key={i} className="recommend-card">
-                    <h3>{skill}</h3>
-                    <p>Course: {recommendationMap[skill]?.course || "Online Course"}</p>
-                    <p>Project: {recommendationMap[skill]?.project || "Build practical project"}</p>
+            <h2 className="recommend-title">AI Career Recommendations</h2>
+
+            {analysis.results.map((job, index) => (
+
+                <div className="recommend-card" key={index}>
+
+                    <h3>{job.job_title}</h3>
+
+                    <h4>Priority Skills To Learn</h4>
+                    <div className="skills">
+                        {job.missing_skills.map((skill, i) => (
+                            <span key={i} className="skill">{skill}</span>
+                        ))}
+                    </div>
+
+                    <h4>Recommended Actions</h4>
+                    <ul>
+                        {job.missing_skills.map((skill, i) => (
+                            <li key={i}>Improve {skill}</li>
+                        ))}
+                    </ul>
+
+                    <h4>Project Suggestions</h4>
+                    <ul>
+                        {job.missing_skills.map((skill, i) => (
+                            <li key={i}>Build project using {skill}</li>
+                        ))}
+                    </ul>
+
                 </div>
+
             ))}
+
         </div>
     );
 }
